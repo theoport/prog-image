@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  image-storage:
+    container_name: image-storage-server
+    build:
+      context: ./image-storage
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=docker
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    command: npm run start
+    network_mode: bridge
+
+  image-rotation:
+    container_name: image-rotation-server
+    build:
+      context: ./image-rotation
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=docker
+      - PORT=3001
+    ports:
+      - "3001:3001"
+    command: npm run start
+    depends_on:
+      - image-storage
+    links:
+      - image-storage
+    network_mode: bridge
