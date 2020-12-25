@@ -10,5 +10,3 @@ const PORT = process.env.PORT || 3000
 server.listen(PORT, () => {
     log.info("Listening on port 3000")
 })
-
-export default server
