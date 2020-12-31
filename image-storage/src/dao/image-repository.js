@@ -2,6 +2,7 @@ import {v4 as uuidv4} from 'uuid'
 import fs from 'fs'
 import FileType from 'file-type'
 import { InternalError, NotFoundError } from '../domain/progimage-errors.js'
+import { pipeline } from 'stream'
 
 class ImageRepository {
 
@@ -9,15 +10,15 @@ class ImageRepository {
         const imageId = uuidv4()
         const path = `images/${imageId}`
         const destination = fs.createWriteStream(path, {encoding: 'binary'})
-        inputStream.pipe(destination)
-        return new Promise((resolve, reject) => {
-            destination.on('finish', () => {
-                resolve(imageId)
-            }).on('error', (err) => {
-                fs.unlinkSync(path)
-                reject(err)
+        return new Promise(((resolve, reject) => {
+            pipeline(inputStream, destination, (err, res) => {
+                if (err) {
+                    fs.unlinkSync(path)
+                    reject(err)
+                }
+                resolve(res)
             })
-        })
+        }))
     }
 
     async getImage(imageId) {
