@@ -82,7 +82,7 @@ Rotated image can then be retrieved from storage server
 
 ## Task
 
-_Below the task that this repository solved_
+_Below the task that this project was submitted in response to_
 
 You are a member of a team that has been tasked with developing a programmatic image storage and processing service called ProgImage.com.
 
